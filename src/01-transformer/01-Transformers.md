@@ -15,6 +15,8 @@ Self-attention is a basic form of a scaled self-attention mechanism. This mechan
 ![Self-attention](./images/self-attention.png)
 So, X is the input word sequence, and we calculate three values from that which is **Q(Query)**, **K(Key)** and **V(Value)**.
 
+![Self-attention](./images/self-attention-mechanism.png)
+
 - **Query (Q)**: What we're looking for
 - **Key (K)**: What we match against
 - **Value (V)**: The information to extract
