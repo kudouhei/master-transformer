@@ -46,3 +46,16 @@ The availability and accessibility of powerful foundation models lead to three f
 - Low entrance barrier to building AI applications
 
 ![alt text](./images/a2.png)
+
+### Foundation Model Use Cases
+
+Note that the small percentage of education, data organization, and writing use cases doesn’t mean that these use cases aren’t popular. It just means that these applications aren’t open source. Builders of these applications might find them more suitable for enterprise use cases.
+
+![alt text](./images/a3.png)
+
+The enterprise world generally prefers applications with lower risks.
+
+Internal applications help companies develop their AI engineering expertise while minimizing the risks associated with data privacy, compliance, and potential catastrophic failures. Similarly, while foundation models are open-ended and can be used for any task, many applications built on top of them are still close-ended, such as classification. Classification tasks are easier to evaluate, which makes their risks easier to estimate.
+
+![alt text](./images/a4.png)
+
