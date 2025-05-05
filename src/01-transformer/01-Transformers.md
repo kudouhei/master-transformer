@@ -6,6 +6,8 @@ The attention mechanism is an important part of these models and plays a very cr
 
 The attention mechanism is a mechanism that allows the model to focus on the most important parts of the input sequence. It is a mechanism that allows the model to attend to the most important parts of the input sequence.
 
+The attention mechanism computes how much attention to give an input token by performing a `dot product` between the query vector and its key vector.
+
 ### Self-attention
 
 Self-attention is a mechanism that allows the model to attend to the most important parts of the input sequence. It is a mechanism that allows the model to attend to the most important parts of the input sequence.
