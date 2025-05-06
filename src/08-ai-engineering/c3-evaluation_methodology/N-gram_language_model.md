@@ -236,7 +236,7 @@ $$
 The perplexity of a model P on a sequence of words W is now formally deﬁned as 2 raised to the power of this cross-entropy:
 
 $$
-PP(W) = 2^{H(W)} = P(w_1, w_2, ..., w_n)^{-\frac{1}{n}} = \sqrt[n]{\frac{1}{P(w_1, w_2, ..., w_n)}}
+Perplexity(W) = 2^{H(W)} = P(w_1, w_2, ..., w_n)^{-\frac{1}{n}} = \sqrt[n]{\frac{1}{P(w_1, w_2, ..., w_n)}}
 $$
 
 
