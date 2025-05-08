@@ -8,7 +8,7 @@ Why would we want to predict upcoming words, or know the probability of a senten
 An n-gram is a sequence of n words. a 2-gram (which we’ll call bigram) is a two-word sequence of words like The water, or water of, and a 3gram (a trigram) is a three-word sequence of words like The water of, or water of Walden.
 
 
-![N-gram Language Model](../images/3-2.png)
+![N-gram Language Model](./images/3-2.png)
 
 To represent the probability of a particular random variable $X_i$ taking on the value “the”, or `P($X_i$ = “the”)`, we will use the simplification $P(the)$. 
 We’ll represent a sequence of `n` words either as $w_1 ...w_n$ or $w_{1:n}$. Thus the expression $w_{1:n-1}$ means the string $w_1, w_2, ..., w_{n-1}$, but we’ll also be using the equivalent notation $w_{<n}$, which can be read as “all the elements of w from $w_1$ up to and including $w_{n-1}$”. For the joint probability of each word in a sequence having a particular value $P(X_1 = w_1, X_2 = w_2, X_3 = w_3, ..., X_n = w_n)$ we’ll use $P(w_1, w_2, ..., w_n)$.
