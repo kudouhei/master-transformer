@@ -100,3 +100,51 @@ w_{t,d} = tf_{t,d} \times idf_{t}
 $$
 
 ### Pointwise Mutual Information (PMI)
+PPMI (positive pointwise mutual information), is used for term-term-matrices, when the vector dimensions correspond to words rather than documents.
+
+It is a measure of how often two events x and y occur, compared with what we would expect if they were independent:
+
+$$
+I(x, y) = \log_2 \frac{P(x, y)}{P(x)P(y)}
+$$
+
+The pointwise mutual information between a target word w and a context word `c` is then defined as:
+
+$$
+PMI(w, c) = \log_2 \frac{P(w, c)}{P(w)P(c)}
+$$
+
+PMI is based on the mutual information between two random variables X and Y, deﬁned as:
+
+$$
+I(X; Y) = \sum_{x \in X} \sum_{y \in Y} P(x, y) \log_2 \frac{P(x, y)}{P(x)P(y)}
+$$
+
+
+Positive PMI (called PPMI) which replaces all negative PMI values with zero:
+
+$$
+PPMI(w, c) = \max(0, PMI(w, c))
+$$
+
+More formally, let’s assume we have a co-occurrence matrix $F$ with $W$ rows (words) and $C$ columns (contexts), where $f_{ij}$ gives the number of times word $w_i$ occurs with context $c_j$. 
+
+This can be turned into a PPMI matrix where $PPMI_{ij}$ gives the PPMI value of word $w_i$ with context $c_j$ (which we can also express as PPMI($w_i$ ,$c_j$) or PPMI($w=i$,$c=j$)) as follows:
+
+$$
+P_{ij} = \frac{f_{ij} }{\sum_{i=1}^{W} \sum_{j=1}^{C} f_{ij}},
+P_{i*} = \frac{\sum_{j=1}^{C} f_{ij}}{\sum_{i=1}^{W} \sum_{j=1}^{C} f_{ij}},
+P_{*j} = \frac{\sum_{i=1}^{W} f_{ij}}{\sum_{i=1}^{W} \sum_{j=1}^{C} f_{ij}}
+$$
+
+
+$$
+PPMI_{ij} = \max(0, \log_2 \frac{P_{ij}}{P_{i*}P_{*j}})
+$$
+
+Example:
+
+![Example of PPMI](./images/a3.png)
+
+
+
