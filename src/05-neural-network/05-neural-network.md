@@ -1,6 +1,6 @@
 # Neural Network
 
-## Units
+## 1.Units
 The building block of a neural network is a single computational unit. A unit takes a set of real valued numbers as input, performs some computation on them, and produces an output.
 
 - **bias term**
@@ -66,13 +66,13 @@ We’ll discuss **three popular non-linear functions $f$** below (the sigmoid, t
     ![ReLU](./images/03-sigmoid.png)
 
 
-## The XOR problem
+## 2. The XOR problem
 
 The XOR problem is a classic problem in machine learning. It is a binary classification problem where the input is a two-dimensional vector and the output is a binary label. The problem is that the XOR function is not linearly separable, meaning that no single line can separate the positive and negative examples.
 
 ![XOR](./images/04-xor.png)
 
-## Feedforward Neural Networks
+## 3. Feedforward Neural Networks
 A feedforward network is a multilayer network in which the units are connected with no cycles; the outputs from units in each layer are passed to units in the next higher layer, and no outputs are passed back to lower layers. (networks with cycles, called recurrent neural networks.)
 
 **Multi-layer perceptrons (MLPs)**
@@ -121,7 +121,7 @@ $$
 y = softmax(z)
 $$
 
-### Feedforward networks for NLP: Classiﬁcation
+## 4. Feedforward networks for NLP: Classiﬁcation
 
 Let’s begin with a simple 2-layer sentiment classifier. 
 
