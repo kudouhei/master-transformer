@@ -379,6 +379,61 @@ At each iteration of training (whenever we update parameters, i.e. each mini-bat
 **Hyperparameters**
 The parameters of a neural network are the weights W and biases b; those are learned by gradient descent. The hyperparameters are things that are chosen by the algorithm designer; optimal values are tuned on a devset rather than by gradient descent learning on the training set.
 
+## 6. Feedforward neural language models
+A feedforward neural language model (LM) is a feedforward network that takes as input at time t a representation of some number of previous words ($w_{t-1}$ ,$w_{t-2}$ , etc.) and outputs a probability distribution over possible next words. Thus—like the n-gram LM—the feedforward neural LM approximates the probability of a word given the entire prior context $P(w_t | w_{1:t-1})$ by approximating based on the $N−1$ previous words:
+
+$$
+P(w_t | w_1, ..., w_{t-1}) \approx P(w_t | w_{t-N+1}, ..., w_{t-1})
+$$
+
+In the following examples we’ll use a 4-gram example, so we’ll show a neural net to estimate the probability $P(w_t = i | w_{t-3}, w_{t-2}, w_{t-1})$.
+
+Neural language models represent words in this prior context by their **embeddings**, rather than just by their word identity as used in n-gram language models. Using embeddings allows neural language models to generalize better to unseen data.
+
+### 6.1 Forward inference in the neural language model
+
+**One-hot vector**
+We first represent each of the $N$ previous words as a one-hot vector of length $|V|$, i.e., with one dimension for each word in the vocabulary.
+
+A one-hot vector is a vector that has one element equal to 1—in the dimension corresponding to that word’s index in the vocabulary— while all the other elements are set to zero. 
+
+Thus in a one-hot representation for the word "toothpaste", supposing it is $V_5$, i.e., index 5 in the vocabulary, $x_5 = 1$, and $x_i = 0 \forall i \neq 5$, as shown here:
+
+```
+[0, 0, 0, 0, 1, 0, 0, 0, 0, 0]
+ 1  2  3  4  5  6  7 ...   |V|
+```
+
+The feedforward neural language model has a moving window that can see $N$ words into the past.
+
+- We’ll let N equal 3, so the 3 words $w_{t-1}$, $w_{t-2}$, and $w_{t-3}$ are each represented as a one-hot vector. 
+- We then multiply these one-hot vectors by the embedding matrix $E$. The embedding weight matrix $E$ has a column for each word, each a column vector of $d$ dimensions, and hence has dimensionality $d \times |V|$. 
+- Multiplying by a one-hot vector that has only one non-zero element $x_i = 1$ simply selects out the relevant column vector for word $i$, resulting in the embedding for word $i$, as shown in Fig.
+
+![embedding](./images/15-embedding.png)
+
+The 3 resulting embedding vectors are concatenated to produce e, the embedding layer. This is followed by a hidden layer and an output layer whose softmax produces a probability distribution over words. For example $y_{42}$, the value of output node 42, is the probability of the next word $w_t$ being $V_{42}$, the vocabulary word with index 42 (which is the word ‘ﬁsh’ in our example).
+
+Here’s the algorithm in detail for our mini example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
