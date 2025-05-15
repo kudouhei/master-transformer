@@ -416,18 +416,39 @@ The 3 resulting embedding vectors are concatenated to produce e, the embedding l
 
 Here’s the algorithm in detail for our mini example:
 
+1. **Select three embeddings from E**: Given the three previous words, we look up their indices, create 3 one-hot vectors, and then multiply each by the embedding matrix **E**. Consider $w_{t−3}$ . 
+   The one-hot vector for ‘for’ (index 35) is multiplied by the embedding matrix **E**, to give the first part of the first hidden layer, **the embedding layer**. 
+   Since each column of the input matrix **E** is an embedding for a word, and the input is a one-hot column vector $x_i$ for word $V_i$, the embedding layer for input $w$ will be $E x_{i} = e_{i}$, the embedding for word $i$.
+   We now concatenate the three embeddings for the three context words to produce the embedding layer $e$.
+2. **Multiply by W**: We multiply by **W** (and add b) and pass through the ReLU (or other) activation function to get the hidden layer $h$.
+3. **Multiply by U**: $h$ is now multiplied by $U$
+4. **Apply softmax**: After the softmax, each node $i$ in the output layer estimates the probability $P(w_t = i | w_{t-1}, w_{t-2}, w_{t-3})$.
 
+In summary, the equations for a neural language model with a window size of 3, given one-hot input vectors for each input context word, are:
 
+$$
+e = [Ex_{t-3}; Ex_{t-2}; Ex_{t-1}]
+$$
 
+$$
+h = σ(We+b)
+$$
 
+$$
+z = U h
+$$
 
+$$
+\hat{y} = softmax(z)
+$$
 
+### 7. Training the neural language model
 
+![training](./images/a1.png)
 
+![training](./images/a2.png)
 
-
-
-
+![training](./images/a3.png)
 
 
 
