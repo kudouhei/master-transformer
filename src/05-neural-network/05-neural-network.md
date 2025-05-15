@@ -172,5 +172,47 @@ $$
 
 ![sentiment classifier](./images/07-pooling.png)
 
+## 5. Training neural Networks
+A feedforward neural net is an instance of supervised machine learning in which we know the correct output $y$ for each observation $x$.
+
+Steps:
+1. First, we’ll need a **loss function** that models the distance between the system output and the gold output, and it’s common to use the loss function used for logistic regression, the **cross-entropy loss**.
+2. Second, to ﬁnd the parameters that minimize this loss function, we’ll use the **gradient descent** optimization algorithm
+3. Third, gradient descent requires knowing the gradient of the loss function, the vector that contains the partial derivative of the loss function with respect to each of the parameters. 
+   1. How do we partial out the loss over all those intermediate layers? The answer is the algorithm called **error backpropagation** or **backward differentiation**.
+
+### Loss function
+**Cross-entropy**
+The cross-entropy loss that is used in neural networks is the same one we saw for logistic regression.
+
+If the neural network is being used as a **binary classifier**, with the sigmoid at the final layer, the loss function is the same logistic regression loss:
+
+$$
+L_{CE}(y, \hat{y}) = - \log p(y|x) = - [y \log \hat{y} + (1-y) \log (1-\hat{y})]
+$$
+
+The loss function for a single example **x** is the negative sum of the logs of the **K** output classes, each weighted by their probability $y_k$ in the gold distribution:
+
+$$
+L_{CE}(y, \hat{y}) = - \sum_{k=1}^{K} y_k \log \hat{y}_k
+$$
+
+**Negative log likelihood loss**
+The cross-entropy loss is simply the negative log of the output probability corresponding to the correct class, and we therefore also call this the negative log likelihood loss:
+
+$$
+L_{CE}(y, \hat{y}) = - \log \hat{y}_c   
+$$
+
+where $c$ is the correct class.
+
+Plugging in the softmax formula, and with $K$ the number of classes, we get:
+
+$$
+L_{CE}(y, \hat{y}) = - \log \frac{e^{z_c}}{\sum_{j=1}^{K} e^{z_j}}
+$$
+
+
+
 
 
