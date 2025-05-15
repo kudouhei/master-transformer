@@ -252,3 +252,137 @@ $$
 ![computation graph](./images/08-forward.png)
 
 In the forward pass of a computation graph, we apply each operation left to right, passing the outputs of each computation as the input to the next node.
+
+### 5.4 Backward differentiation
+The importance of the computation graph comes from the backward pass, which is used to compute the derivatives that we’ll need for the weight update.
+
+**Chain rule**
+Backwards differentiation makes use of the chain rule in calculus.
+
+Suppose we are computing the derivative of a composite function $f(x) = u(v(x))$. The derivative of $f(x)$ is the derivative of $u(x)$ with respect to $v(x)$ times the derivative of $v(x)$ with respect to $x$:
+
+$$
+\frac{d f}{d x} = \frac{d u}{d v} \times \frac{d v}{d x}
+$$
+
+The chain rule extends to more than two functions. If computing the derivative of a composite function $f(x) = u(v(w(x)))$, the derivative of $f(x)$ is:
+
+$$
+\frac{d f}{d x} = \frac{d u}{d v} \times \frac{d v}{d w} \times \frac{d w}{d x}
+$$
+
+The intuition of backward differentiation is to pass gradients back from the final node to all the nodes in the graph.
+
+![backward differentiation](./images/09-backward.png)
+
+In the backward pass, we compute each of these partials along each edge of the graph from right to left, using the chain rule just as we did above.
+
+Thus we begin by computing the downstream gradients from node L, which are: $\frac{\partial L}{\partial e}$ and $\frac{\partial L}{\partial c}$.
+
+![backward differentiation](./images/10-backward.png)
+
+**Backward differentiation for a neural network**
+
+![backward differentiation](./images/11-example.png)
+The figure shows a sample computation graph for a 2-layer neural network with $n_0 = 2$, $n_1 = 2$, and $n_2 = 1$, assuming binary classification and hence using a sigmoid output unit for simplicity.
+
+The function that the computation graph is computing is:
+
+$$
+z^{[1]} = W^{[1]}x + b^{[1]}
+$$
+
+$$
+a^{[1]} = ReLU(z^{[1]})
+$$
+
+$$
+z^{[2]} = W^{[2]}a^{[1]} + b^{[2]}
+$$
+
+$$
+a^{[2]} = \sigma(z^{[2]})
+$$
+
+$$
+\hat{y} = a^{[2]}
+$$
+
+For the backward pass we’ll also need to compute the loss L. The loss function for binary sigmoid output is:
+
+$$
+L = -[y \log \hat{y} + (1-y) \log (1-\hat{y})]
+$$
+
+Our output $\hat{y} = a^{[2]}$, so we can rephrase this as:
+
+$$
+L(a^{[2]}, y) = -[y \log a^{[2]} + (1-y) \log (1-a^{[2]})]
+$$
+
+The weights that need updating (those for which we need to know the partial derivative of the loss function) are shown in teal.
+
+The derivative of the sigmoid $\sigma$ is:
+
+$$
+\frac{d \sigma}{d z} = \sigma(z) (1 - \sigma(z))
+$$
+
+We’ll also need the derivatives of each of the other activation functions. The derivative of tanh is:
+
+$$
+\frac{d \tanh(z)}{d z} = 1 - \tanh^2(z)
+$$
+
+The derivative of the ReLU is:
+
+$$
+\frac{d ReLU(z)}{d z} = \begin{cases} 
+0 & \text{if } z < 0 \\
+1 & \text{if } z \geq 0 
+\end{cases}
+$$
+
+We’ll give the start of the computation, computing the derivative of the loss function $L$ with respect to z, or $\frac{\partial L}{\partial z}$. By the chain rule:
+
+$$
+\frac{\partial L}{\partial z} = \frac{\partial L}{\partial a^{[2]}} \times \frac{\partial a^{[2]}}{\partial z}
+$$
+
+So let’s first compute $\frac{\partial L}{\partial a^{[2]}}$
+
+$$
+L(a^{[2]}, y) = -[y \log a^{[2]} + (1-y) \log (1-a^{[2]})]
+$$
+
+$$
+\frac{\partial L}{\partial a^{[2]}} = - \frac{y}{a^{[2]}} + \frac{1-y}{1-a^{[2]}}
+$$
+
+Next, by the derivative of the sigmoid function, we have:
+
+$$
+\frac{\partial a^{[2]}}{\partial z} = a^{[2]} (1 - a^{[2]})
+$$
+
+Finally, we can use the chain rule:
+
+$$
+\frac{\partial L}{\partial z} = \frac{\partial L}{\partial a^{[2]}} \times \frac{\partial a^{[2]}}{\partial z} = - (\frac{y}{a^{[2]}} - \frac{1-y}{1-a^{[2]}}) \times a^{[2]} (1 - a^{[2]}) = a^{[2]} - y
+$$
+
+**Dropout**
+Various forms of regularization are used to prevent overfitting. One of the most important is dropout: randomly dropping some units and their connections from the network during training.
+
+At each iteration of training (whenever we update parameters, i.e. each mini-batch if we are using mini-batch gradient descent), we repeatedly choose a probability p and for each unit we replace its output with zero with probability p (and renormalize the rest of the outputs from that layer).
+
+**Hyperparameters**
+The parameters of a neural network are the weights W and biases b; those are learned by gradient descent. The hyperparameters are things that are chosen by the algorithm designer; optimal values are tuned on a devset rather than by gradient descent learning on the training set.
+
+
+
+
+
+
+
+
