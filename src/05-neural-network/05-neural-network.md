@@ -181,7 +181,7 @@ Steps:
 3. Third, gradient descent requires knowing the gradient of the loss function, the vector that contains the partial derivative of the loss function with respect to each of the parameters. 
    1. How do we partial out the loss over all those intermediate layers? The answer is the algorithm called **error backpropagation** or **backward differentiation**.
 
-### Loss function
+### 5.1 Loss function
 **Cross-entropy**
 The cross-entropy loss that is used in neural networks is the same one we saw for logistic regression.
 
@@ -212,7 +212,43 @@ $$
 L_{CE}(y, \hat{y}) = - \log \frac{e^{z_c}}{\sum_{j=1}^{K} e^{z_j}}
 $$
 
+### 5.2 Gradient Descent
+How do we compute the gradient of this loss function?
 
+Computing the gradient requires the partial derivative of the loss function with respect to each parameter. For a network with one weight layer and sigmoid output, we could simply use the derivative of the loss that we used for logistic regression.
 
+$$
+\frac{\partial L_{CE} (y, \hat{y})}{\partial w_{j}} = (\hat{y} - y) x_j = (\sigma(w x + b) - y) x_j
+$$
 
+For a network with one weight layer and softmax output (=multinomial logistic regression), for a particular weight $w_{k}$ and input $x_i$, the partial derivative of the loss with respect to $w_{k}$ is:
 
+$$
+\frac{\partial L_{CE} (y, \hat{y})}{\partial w_{k,i}} = -(y_k - \hat{y}_k) x_{i} = -(y_k - p(y_k = 1 | x)) x_{i} = -(y_k - \frac{e^{w_k x + b_k}}{\sum_{j=1}^{K} e^{w_j x + b_j}}) x_{i}
+$$
+
+But these derivatives only give correct updates for one weight layer: the last one! For deep networks, computing the gradients for each weight is much more complex, since we are computing the derivative with respect to weight parameters that appear all the way back in the very early layers of the network, even though the loss is computed only at the very end of the network.
+
+**Error backpropagation**
+The solution to computing this gradient is an algorithm called error backpropagation or backprop. While backprop was invented specially for neural networks, it turns out to be the same as a more general procedure called backward differentiation, which depends on the notion of computation graphs.
+
+### 5.3 Computation graphs
+A computation graph is a representation of the process of computing a mathematical expression, in which the computation is broken down into separate operations, each of which is modeled as a node in a graph.
+
+Consider computing the function $L(a,b,c) = c(a+2b)$. If we make each of the component addition and multiplication operations explicit, and add names (d and e) for the intermediate outputs, the resulting series of computations is:
+
+$$
+d = 2b
+$$
+
+$$
+e = a + d
+$$
+
+$$
+L = c \times e
+$$
+
+![computation graph](./images/08-forward.png)
+
+In the forward pass of a computation graph, we apply each operation left to right, passing the outputs of each computation as the input to the next node.
