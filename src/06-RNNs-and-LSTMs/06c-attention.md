@@ -59,6 +59,26 @@ The weights $W_s$, which are then trained during normal end-to-end training, giv
 
 This bilinear model also allows the encoder and decoder to use different dimensional vectors, whereas the simple dot-product attention requires that the encoder and decoder hidden states have the same dimensionality. 
 
+**Note:**
+**关键组件详解**
+1. 编码器（Encoder）
+   - 输入序列 𝑥1, 𝑥2, . . . , 𝑥n 被送入编码器的隐藏层（通常是 RNN、LSTM 或 Transformer 的一部分）。
+   - 编码器输出的是每个时刻的隐藏状态 $h_j^e$，其中 $j=1,2,...,n$。
+
+2. 注意力机制（Attention）
+   - 解码器在生成第 $i$ 个输出 $y_i$ 时，会计算一个上下文向量 $c_i$。
+   - 上下文向量 $c_i$ 是所有编码器隐藏状态的加权和: $c_i = \sum_{j=1}^n \alpha_{ij} h_j^e$
+     - $\alpha_{ij}$ 是注意力权重，表示在第 $i$ 个解码步骤中，编码器第 $j$ 个隐藏状态对当前输出的“关注度”。
+     - 注意力权重是通过解码器上一个隐藏状态 $h_{i-1}^d$ 和每一个编码器隐藏状态 $h_j^e$ 的打分函数（通常是点积或其他）计算出来的
+     - 在图中：
+       - 虚线箭头表示打分过程, 即计算 $\alpha_{ij}$
+       - 实线箭头表示加权求和过程, 即计算 $c_i$
+       - 图中绿色圆圈中的数字（例如 0.4、0.3、0.1、0.2）是具体的注意力权重 $\alpha_{ij}$
+
+3. 解码器（Decoder）
+   - 解码器在生成第 $i$ 个输出 $y_i$ 时
+     - 输入包括前一个时刻的隐藏状态 $h_{i-1}^d$ 和前一个输出 $y_{i-1}$， 以及上下文向量 $c_i$
+     - 解码器使用这些信息来计算当前时刻的隐藏状态 $h_i^d$，并生成当前时刻的输出 $y_i$
 
 
 
