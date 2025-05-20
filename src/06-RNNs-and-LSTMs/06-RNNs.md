@@ -83,5 +83,77 @@ The probability of an entire sequence is just the product of the probabilities o
 
 $$ P(w_{1:n}) = \prod_{i=1}^n P(w_i | w_{1:i-1}) = \prod_{i=1}^n \hat{y}_i [w_i] $$
 
+## 2.2 Training an RNN language model
+
+To train an RNN as a language model, we use the same self-supervision (or self-training) algorithm that we used for feedforward networks.
+
+We take a corpus of text as training material and at each time step $t$ ask the model to predict the next word.
+
+$$ L_{CE} = - \sum_{w\in V} y_t[w] \log \hat{y}_t[w] $$
+
+![Training an RNN language model](./images/05-train-RNN.png)
+
+In the case of language modeling, the correct distribution $y_t$ comes from knowing the next word. This is represented as a one-hot vector corresponding to the vocabulary where the entry for the actual next word is 1, and all the other entries are 0.
+
+Thus, the cross-entropy loss for language modeling is determined by the probability the model assigns to the correct next word. So at time $t$ the CE loss is the negative log probability the model assigns to the next word in the training sequence.
+
+$$ L_{CE}(\hat{y}_t, y_t) = - \log \hat{y}_t[w_{t+1}] $$
+
+Thus at each word position $t$ of the input, the model takes as input the correct word $w_t$ together with $h_{t-1}$, encoding information from the preceding $w_{1:t-1}$, and uses them to compute a probability distribution over possible next words so as to compute the model’s loss for the next token $w_{t+1}$.
+
+Then we move to the next word, we ignore what the model predicted for the next word and instead use the correct word $w_{t+1}$ along with the prior history encoded in $h_{t-1}$ to estimate the probability of token $w_{t+2}$.
+
+## 2.3 Weight Typing
+
+The columns of $E$ represent the word embeddings for each word in the vocabulary learned during the training process with the goal that words that have similar meaning and function will have similar embeddings.    
+
+And, since when we use RNNs for language modeling we make the assumption that the embedding dimension and the hidden dimension are the same (= the model dimension $d$), the embedding matrix $E$ has shape $[d \times |V|]$.
+
+And the final layer matrix $V$ provides a way to score the likelihood of each word in the vocabulary given the evidence present in the final hidden layer of the network through the calculation of $Vh$.
+
+$V$ is of shape $[|V| \times d]$. That is, is, the rows of $V$ are shaped like a transpose of $E$, meaning that $V$ provides a second set of learned word embeddings.
+
+**Weight tying**
+
+Instead of having two sets of embedding matrices, language models use a single embedding matrix, which appears at both the input and softmax layers. That is, we dispense with $V$ and use $E$ at the start of the computation and $E^T$, because the shape of $V$ is the transpose of $E$ at the end. Using the same matrix (transposed) in two places is called **weight tying**. 
+
+The weight-tied equations for an RNN language model then become:
+
+$$ e_t = E x_t $$
+
+$$ h_t = g(Uh_{t-1} + We_t) $$
+
+$$ \hat{y}_t = \text{softmax}(E^T h_t) $$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
