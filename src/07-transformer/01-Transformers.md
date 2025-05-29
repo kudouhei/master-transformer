@@ -9,9 +9,6 @@ A transformer has three major components. At the center are columns of transform
 - Each block is a multilayer network (a **multi-head attention** layer, feedforward networks and layer normalization steps) that maps an input vector $x_i$ in column i (corresponding to input token i) to an output vector $h_i$. The set of n blocks maps an entire **context window** of input vectors $(x_1, ..., x_n)$ to a window of output vectors $(h_1, ..., h_n)$ of the same length. A column might contain from 12 to 96 or more stacked blocks.
 - The column of blocks is preceded by the **input encoding** component, which processes an input token (like the word thanks) into a contextual vector representation, using an embedding matrix E and a mechanism for encoding token position. Each column is followed by a language modeling head, which takes the embedding output by the ﬁnal transformer block, passes it through an unembedding matrix U and a softmax over the vocabulary to generate a single token for that column.
 
-
-
-
 ## Attention mechanism
 
 The attention mechanism is a mechanism that allows the model to focus on the most important parts of the input sequence. It is a mechanism that allows the model to attend to the most important parts of the input sequence.
@@ -95,6 +92,7 @@ A **Transformer block** is made up of two successive components:
 2. The **feedforward layer** houses the majority of the model’s processing capacity
 
 ![Transformer Block](./images/transformer-block.png)
+
 
 
 
