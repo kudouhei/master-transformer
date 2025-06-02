@@ -1,4 +1,108 @@
-## Attention mechanism
+# Attention mechanism
+
+## Attention more formally
+
+![Attention mechanism](./images/attention-1.png)
+
+The Fig. above illustrates this flow of information in an entire causal self-attention layer, in which this same attention computation happens in parallel at each token position $i$. Thus a self-attention layer maps input sequences $(x_1, ..., x_n)$ to output sequences of the same length $(a_1, ..., a_n)$.
+
+### Simplified version of attention
+At its heart, attention is really just a weighted sum of context vectors, with a lot of complications added to how the weights are computed and what gets summed.
+
+Let's describe a simplified version of attention, in which the attention output $a_i$ at token position $i$ is simply the weighted sum of all the representations $x_j$, for all $j \leq i$; we’ll use $\alpha_{ij}$ to mean how much $x_j$ should contribute to $a_i$:
+
+**Simplified version: $a_i = \sum \alpha_{ij} x_j$**
+
+
+We compute similarity scores via dot product. We’ll normalize these scores with a softmax to create the vector of weights $\alpha_{ij}$, for all $j \leq i$.
+
+**Simplified Version: $score(x_i ,x_j ) = x_i ·x_j$**
+**Normalized: $\alpha_{ij} = softmax(score(x_i ,x_j ))$**
+
+Thus in the Fig we compute $a_3$ by computing three scores: $x_3 ·x_1$, $x_3 ·x_2$, and $x_3 ·x_3$, normalizing them by a softmax, and using the resulting probabilities as weights indicating each of their proportional relevance to the current position $i$.
+
+### A single attention head using query, key, and value matrices
+Now that we’ve seen a simple intuition of attention, let’s introduce the actual attention head, the version of attention that’s used in transformers.
+
+The attention head allows us to distinctly represent three different roles that each input embedding plays during the course of the attention process:
+
+- **Query**: As the current element being compared to the preceding inputs.
+- **Key**: In its role as a preceding input that is being compared to the current element to determine a similarity weight.
+- **Value**: As a value of a preceding element that gets weighted and summed up to compute the output for the current element.
+
+To capture these three different roles, transformers introduce weight matrices $W^Q$, $W^K$, and $W^V$. These weights will project each input vector $x_i$ into a representation of its role as a key, query, or value:
+
+**$q_i = W^Q x_i$**
+**$k_i = W^K x_i$**
+**$v_i = W^V x_i$**
+
+- When we are computing the similarity of the current element $x_i$ with some prior element $x_j$, we’ll use the **dot product** between the current element’s query vector $q_i$ and the preceding element’s key vector $k_j$. 
+- Furthermore, the result of a dot product can be an arbitrarily large (positive or negative) value, and exponentiating large values can lead to numerical issues and loss of gradients during training.
+- To avoid this, we **scale the dot product by a factor related to the size of the embeddings, via dividing by the square root of the dimensionality of the query and key vectors ($d_k$).**
+- The ensuing softmax calculation resulting in $\alpha_{ij}$ remains the same, but the output calculation for head $i$ is now based on a weighted sum over the value vectors $v$.
+
+Here’s a final set of equations for computing self-attention for a single self-attention output vector $a_i$ from a single input vector $x_i$. This version of attention computes $a_i$ by summing the values of the prior elements, each weighted by the similarity of its key to the query from the current element:
+
+$$
+q_i = W^Q x_i; k_j = W^K x_j; v_j = W^V x_j
+$$
+
+$$
+score(x_i ,x_j ) = \frac{x_i ·x_j}{\sqrt{d_k}} = \frac{q_i ·k_j}{\sqrt{d_k}}
+$$
+
+$$
+\alpha_{ij} = softmax(score(x_i ,x_j ))
+$$
+
+$$
+head_i = \sum_{j \leq i} \alpha_{ij} v_j
+$$
+
+$$
+a_i = head_i W^O
+$$
+
+![Attention mechanism](./images/attention-2.png)
+
+**Note that we’ve also introduced one more matrix, $W^O$, which is right-multiplied by the attention head.**  This is necessary to reshape the output of the head. 
+- The input to attention $x_i$ and the output from attention $a_i$ both have the same dimensionality [1 × d]. We often call d the **model dimensionality**.
+
+Let’s talk **shapes**. 
+
+How do we get from $[1 × d]$ at the input to $[1 × d]$ at the output? Let’s look at all the internal shapes.
+               
+1. We’ll have a dimension $d_k$ for the key and query vectors.
+2. The query vector and the key vector are both dimensionality **$1 × d_k$**, so we can take their dot product **$q_i · k_j$** to produce a scalar.
+3. We’ll have a separate dimension $d_v$ for the value vectors.
+4. **The transform matrix $W^Q$ has shape **$[d × d_k]$**, $W^K$ is **$[d × d_k]$**, and $W^V$ is **$[d × d_v]$**.**
+5. So the output of $head_i$ in equation is of shape **$[1 × d_v]$**.
+6. To get the **desired output shape $[1 × d]$** we’ll need to reshape the head output, and so **$W^O$ is of shape $[d_v × d]$**.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Attention mechanism workflow
 
 ![Attention mechanism](./images/attention.png)
 
