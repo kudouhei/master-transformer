@@ -80,26 +80,49 @@ How do we get from $[1 × d]$ at the input to $[1 × d]$ at the output? Let’s 
 6. To get the **desired output shape $[1 × d]$** we’ll need to reshape the head output, and so **$W^O$ is of shape $[d_v × d]$**.
 
 
+### Multi-head attention
+The intuition is that each head might be attending to the context for different purposes: heads might be specialized to represent different linguistic relationships between context elements and the current token, or to look for particular kinds of patterns in the context.
+
+So in **multi-head attention** we have $A$ separate attention heads that reside in parallel layers at the same depth in a model, each with its own set of parameters that allows the head to model different aspects of the relationships among inputs.
+
+Thus, each head $i$ in a self-attention layer has its own set of key, query and value matrices: $W^{K_i}$, $W^{Q_i}$ and $W^{V_i}$. These are used to project the inputs into separate key, value, and query embeddings for each head.
+
+When using multiple heads the model dimension d is still used for the input and output, the key and query embeddings have dimensionality $d_k$, and the value embeddings are of dimensionality $d_v$ (again, in the original transformer paper $d_k = d_v= 64$, $A = 8$, and $d = 512$).
+
+**Thus for each head $i$, we have weight layers $W^{Q_i}$ of shape $[d × d_k]$, $W^{K_i}$ of shape $[d × d_k]$, and $W^{V_i}$ of shape $[d × d_v]$.**
+
+Below are the equations for attention augmented with multiple heads:
+
+$$
+q^c_i = W^{Q_c} x_i; k^c_j = W^{K_c} x_j; v^c_j = W^{V_c} x_j
+$$
+
+$$
+score^c(x_i ,x_j ) = \frac{q^c_i ·k^c_j}{\sqrt{d_k}}
+$$
+
+$$
+\alpha^c_{ij} = softmax(score^c(x_i ,x_j ))
+$$
+
+$$
+head^c_i = \sum_{j \leq i} \alpha^c_{ij} v^c_j
+$$
+
+$$
+a_i= (head^1 ⊕ head^2... ⊕ head^A)W^O
+$$
+
+$$ 
+Multi-head attention: a_i= (x_i, [x_1, ..., x_N])
+$$
+
+- The output of each of the A heads is of shape $1 × d_v$ , and so the output of the multi-head layer with A heads consists of A vectors of shape $1 × d_v$. 
+- These are concatenated to produce a single output with dimensionality $1 × hd_v$.
+- Then we use yet another linear projection $W^O$ ∈ $R^{Ad_v ×d}$ to reshape it, resulting in the multi-head attention vector $a_i$ with the correct output shape $[1×d]$ at each input $i$.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![Multi-head attention](./images/attention-3.png)
 
 
 ### Attention mechanism workflow
