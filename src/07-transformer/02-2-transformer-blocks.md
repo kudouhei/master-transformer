@@ -94,3 +94,4 @@ Each token vector $x_i$ at the input to the block has dimensionality $d$, and th
 **Eq-3** and following are just the equation for a single transformer block, but the residual stream metaphor goes through all the transformer layers, from the first transformer blocks to the 12th, in a 12-layer transformer.
 - At the earlier transformer blocks, the residual stream is representing the current token. 
 - At the highest transformer blocks, the residual stream is usually representing the following token, since at the very end it’s being trained to predict the next token.
+
