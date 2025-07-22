@@ -65,4 +65,4 @@ for dir in src/*/; do
 done
 
 echo -e "\n\n\n"
-echo -e "You are now set up.\n\nPlease run 'conda activate 1_basic' to begin.\nWhen ready for the next dir run 'conda deactivate'\nthen 'conda activate chapter_2' and so on."
+echo -e "You are now set up.\n\nPlease run 'conda activate 1_basic' to begin.\n"
