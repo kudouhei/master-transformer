@@ -1,8 +1,8 @@
-from utils import process_utt
-from utils import lookup
+from utils import process_utt  # 处理原始文本，将其转换为单词列表
+from utils import lookup  # 从频率字典中查找特定词和标签对应的频率计数
 
-import nltk
-nltk.download('punkt')
+# import nltk
+# nltk.download('punkt')
 
 from nltk.corpus.reader import PlaintextCorpusReader
 import numpy as np
@@ -12,7 +12,7 @@ my_corpus = PlaintextCorpusReader("./", ".*\.txt")
 sents = my_corpus.sents(fileids="./data/hamlet.txt")
 print(sents[:3])
 
-
+# count_utts函数构建一个字典，记录每个词在不同类别中出现的频率
 def count_utts(result, utts, ys):
     """
     Input:
@@ -35,7 +35,6 @@ def count_utts(result, utts, ys):
             # if the key is new, add it to the dict and set the count to 1
             else:
                 result[pair] = 1
-
     return result
 
 
@@ -100,7 +99,7 @@ def train_naive_bayes(freqs, train_x, train_y):
         freq_neg = lookup(freqs, word, 0)
 
         # calculate the probability that each word is positive, and negative
-        p_w_pos = (freq_pos + 1) / (N_pos + V)
+        p_w_pos = (freq_pos + 1) / (N_pos + V)  # 拉普拉斯平滑
         p_w_neg = (freq_neg + 1) / (N_neg + V)
 
         # calculate the log likelihood of the word
