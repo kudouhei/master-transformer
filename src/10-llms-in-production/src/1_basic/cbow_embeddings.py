@@ -11,9 +11,9 @@ with open('./data/hamlet.txt', 'r', encoding='utf-8') as f:
     data = f.read()
 
 # clean data by removing punctuation, tokenizing by words, and converting to lower case
-data = re.sub(r"[,!?;-]", ".", data)
+data = re.sub(r"[,!?;-]", ".", data)  # replace punctuation with '.'
 data = nltk.word_tokenize(data)
-data = [ch.lower() for ch in data if ch.isalpha() or ch == '.']
+data = [ch.lower() for ch in data if ch.isalpha() or ch == '.'] 
 
 print("Number of tokens:", len(data), "\n", data[500:515])
 
@@ -23,12 +23,13 @@ print("Size of vocabulary:", len(fdist))
 print("Most Frequent Tokens:", fdist.most_common(20))
 
 # create 2 dictionaries: word2idx and idx2word
-word2Ind, Ind2word = get_dict(data)
+word2Ind, Ind2word = get_dict(data)  # word2idx: word -> index, idx2word: index -> word
 
 V = len(word2Ind)
 print("Vocabulary size: ", V, "\n")
 
 # create neural network with 1 layer and 2 parameters
+# 随机初始化模型参数（权重和偏置），N是隐藏层维度，V是词汇表大小。
 def initialize_model(N, V, random_seed=1):
     """
     Inputs:
@@ -65,11 +66,16 @@ def forward_prop(x, W1, W2, b1, b2):
     Inputs:
         x: average one-hot vector for the context
         W1,W2,b1,b2: weights and biases to be learned
+        W₁: 输入层到隐藏层的权重矩阵（形状 (N, V))
+        x: 输入词的平均one-hot向量 (形状 (V, 1))   
+        b₁: 隐藏层的偏置（形状 (N, 1))
+        W₂: 隐藏层到输出层的权重矩阵（形状 (V, N))
+        b₂: 输出层的偏置（形状 (V, 1))
     Outputs:
         z: output score vector
     """
     h = W1 @ x + b1
-    h = np.maximum(0, h)
+    h = np.maximum(0, h)  # 只有激活值>0的神经元才会传递梯度
     z = W2 @ h + b2
     return z, h
 
