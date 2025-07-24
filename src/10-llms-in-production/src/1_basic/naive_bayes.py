@@ -1,11 +1,16 @@
 from utils import process_utt
 from utils import lookup
+
+import nltk
+nltk.download('punkt')
+
 from nltk.corpus.reader import PlaintextCorpusReader
 import numpy as np
 
 my_corpus = PlaintextCorpusReader("./", ".*\.txt")
 
 sents = my_corpus.sents(fileids="./data/hamlet.txt")
+print(sents[:3])
 
 
 def count_utts(result, utts, ys):
