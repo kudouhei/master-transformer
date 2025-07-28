@@ -35,7 +35,6 @@ k_d = 1  # This is normally the square root of the number of dimensions
 attention_scores = (Q @ K.transpose()) / k_d
 print(attention_scores)
 
-
 print("Step 5: Scaled softmax attention_scores for each vector")
 attention_scores[0] = softmax(attention_scores[0])
 attention_scores[1] = softmax(attention_scores[1])
@@ -69,7 +68,6 @@ print("Step 8: Step 1 to 7 for inputs 1 to 3")
 # We'll just take a random matrix of the correct dimensions in lieu
 attention_head1 = np.random.random((3, 64))
 print(attention_head1)
-
 
 print("Step 9: We assume we trained the 8 heads of the attention sub-layer")
 z0h1 = np.random.random((3, 64))
@@ -129,3 +127,24 @@ def DotProductAttention(query, key, value, mask, scale=True):
 
     # Multiply dots by value to get self-attention
     attention = np.matmul(dots, value)
+
+    return attention
+
+
+def masked_dot_product_self_attention(q, k, v, scale=True):
+    """Masked dot product self attention.
+    Args:
+        q: queries.
+        k: keys.
+        v: values.
+    Returns:
+        numpy.ndarray: masked dot product self attention tensor.
+    """
+
+    # Size of the penultimate dimension of the query
+    mask_size = q.shape[-2]
+
+    # Creates ones below the diagonal and 0s above shape (1, mask_size, mask_size)
+    mask = np.tril(np.ones((1, mask_size, mask_size), dtype=np.bool_), k=0)
+
+    return DotProductAttention(q, k, v, mask, scale=scale)
