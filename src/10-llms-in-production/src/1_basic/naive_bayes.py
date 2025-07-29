@@ -1,5 +1,5 @@
-from utils import process_utt  # 处理原始文本，将其转换为单词列表
-from utils import lookup  # 从频率字典中查找特定词和标签对应的频率计数
+from src.utils import process_utt  # 处理原始文本，将其转换为单词列表
+from src.utils import lookup  # 从频率字典中查找特定词和标签对应的频率计数
 
 # import nltk
 # nltk.download('punkt')
