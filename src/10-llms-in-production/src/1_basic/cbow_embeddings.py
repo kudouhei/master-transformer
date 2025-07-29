@@ -1,8 +1,8 @@
 import nltk
 import numpy as np
-from utils import get_batches
-from utils import compute_pca
-from utils import get_dict
+from src.utils import get_batches
+from src.utils import compute_pca
+from src.utils import get_dict
 import re
 from matplotlib import pyplot as plt
 
