@@ -175,14 +175,11 @@ cython_debug/
 ww-img/
 
 # Chapters
-models/
+**/*/models/
 !models/.gitkeep
-chapters/chapter_4/tokenizers/
 
 # JavaScript
 node_modules
-chapters/chapter_9/llama3/llama.pth
-chapters/chapter_9/llama3/lora.pth
 data/CombinedTinyStories-train.txt
 data/CombinedTinyStories-valid.txt
 data/Lima-test.csv
