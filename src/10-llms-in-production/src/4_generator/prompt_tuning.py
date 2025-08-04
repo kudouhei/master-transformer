@@ -20,9 +20,23 @@ from datasets import get_dataset_config_names
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
+# Set cache directory to avoid filesystem issues
+os.environ["HF_DATASETS_CACHE"] = "./cache"
+os.environ["TRANSFORMERS_CACHE"] = "./cache"
+
+# Create cache directory if it doesn't exist
+os.makedirs("./cache", exist_ok=True)
+
+# Global variables for preprocessing
+text_column = None
+label_column = None
+tokenizer = None
+max_length = None
 
 # Helper function to preprocess text - go ahead and skip to the training
 def preprocess_function(examples):
+    global text_column, label_column, tokenizer, max_length
+    
     batch_size = len(examples[text_column])
     inputs = [
         f"{text_column} : {x} Label : " for x in examples[text_column]
@@ -83,6 +97,11 @@ if __name__ == "__main__":
     num_epochs = 1
     batch_size = 8
 
+    # Set global variables for preprocessing
+    globals()['text_column'] = text_column
+    globals()['label_column'] = label_column
+    globals()['max_length'] = max_length
+
     # Define Prompt Tuning Config, notice init_text
     peft_config = PromptTuningConfig(
         task_type=TaskType.CAUSAL_LM,
@@ -106,9 +125,41 @@ if __name__ == "__main__":
     print(raft_subsets)
 
     # Load Dataset
-    dataset = load_dataset("ought/raft", dataset_name, trust_remote_code=True)
-    print(f"Dataset 1: {dataset['train'][0]}")
-    # Dataset 1: {'Tweet text': '@HMRCcustomers No this is my first job', 'ID': 0, 'Label': 2}
+    try:
+        # Force reload to avoid cache issues
+        dataset = load_dataset(
+            "ought/raft", 
+            dataset_name, 
+            trust_remote_code=True,
+            cache_dir="./cache",
+            download_mode="force_redownload"
+        )
+        print(f"Dataset 1: {dataset['train'][0]}")
+        # Dataset 1: {'Tweet text': '@HMRCcustomers No this is my first job', 'ID': 0, 'Label': 2}
+    except Exception as e:
+        print(f"Error loading dataset: {e}")
+        print("Trying alternative loading method...")
+        try:
+            dataset = load_dataset(
+                "ought/raft", 
+                dataset_name,
+                cache_dir="./cache",
+                download_mode="force_redownload"
+            )
+            print(f"Dataset 1: {dataset['train'][0]}")
+        except Exception as e2:
+            print(f"Failed to load dataset: {e2}")
+            # Try with a different approach
+            try:
+                dataset = load_dataset(
+                    "ought/raft", 
+                    dataset_name,
+                    cache_dir="./cache"
+                )
+                print(f"Dataset 1: {dataset['train'][0]}")
+            except Exception as e3:
+                print(f"All loading methods failed: {e3}")
+                raise
 
     # Label Dataset
     classes = [
@@ -127,6 +178,10 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token_id = tokenizer.eos_token_id
+    
+    # Set global tokenizer for preprocessing
+    globals()['tokenizer'] = tokenizer
+    
     target_max_length = max(
         [
             len(tokenizer(class_label)["input_ids"])
