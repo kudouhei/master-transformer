@@ -1,5 +1,7 @@
 models/fineGPT/model.safetensors
 src/10-llms-in-production/models/
+src/10-llms-in-production/models/*
+models/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
