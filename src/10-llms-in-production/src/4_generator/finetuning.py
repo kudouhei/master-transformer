@@ -88,3 +88,5 @@ out = model.generate(
     no_repeat_ngram_size=2,
 )
 print(tokenizer.decode(out[0], skip_special_tokens=True))
+
+# print
