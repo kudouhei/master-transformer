@@ -191,3 +191,6 @@ data/CombinedTinyStories-train.txt
 data/CombinedTinyStories-valid.txt
 data/Lima-test.csv
 data/Lima-train.csv
+
+# Ignore all files and directories in models directory
+src/10-llms-in-production/models/
