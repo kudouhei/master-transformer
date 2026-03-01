@@ -11,6 +11,8 @@ A transformer has three major components. At the center are columns of transform
 
 ## Attention mechanism
 
+**Attention** is the mechanism in the transformer that weighs and combines the representations from appropriate other tokens in the context from layer k to build the representation for tokens in layer k +1.
+
 The attention mechanism is a mechanism that allows the model to focus on the most important parts of the input sequence. It is a mechanism that allows the model to attend to the most important parts of the input sequence.
 
 The attention mechanism computes how much attention to give an input token by performing a `dot product` between the query vector and its key vector.
