@@ -26,7 +26,7 @@ Now that we’ve seen a simple intuition of attention, let’s introduce the act
 
 The attention head allows us to distinctly represent three different roles that each input embedding plays during the course of the attention process:
 
-- **Query**: As the current element being compared to the preceding inputs.
+- **Query**: As the current element being compared to the preceding inputs. We’ll refer to this role as a query.
 - **Key**: In its role as a preceding input that is being compared to the current element to determine a similarity weight.
 - **Value**: As a value of a preceding element that gets weighted and summed up to compute the output for the current element.
 
