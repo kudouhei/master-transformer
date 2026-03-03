@@ -94,7 +94,7 @@ When using multiple heads the model dimension d is still used for the input and 
 Below are the equations for attention augmented with multiple heads:
 
 $$
-q^c_i = W^{Q_c} x_i; k^c_j = W^{K_c} x_j; v^c_j = W^{V_c} x_j
+q^c_i = x_iW^{Q_c} ; k^c_j = x_jW^{K_c} ; v^c_j = x_jW^{V_c}
 $$
 
 $$
