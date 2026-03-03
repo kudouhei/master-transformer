@@ -44,7 +44,7 @@ To capture these three different roles, transformers introduce weight matrices $
 Here’s a final set of equations for computing self-attention for a single self-attention output vector $a_i$ from a single input vector $x_i$. This version of attention computes $a_i$ by summing the values of the prior elements, each weighted by the similarity of its key to the query from the current element:
 
 $$
-q_i = W^Q x_i; k_j = W^K x_j; v_j = W^V x_j
+q_i = x_iW^Q ; k_j = x_jW^K ; v_j = x_jW^V
 $$
 
 $$
@@ -350,3 +350,12 @@ class MultiHeadAttention(nn.Module):
         return context_vec
 ```
 
+## FAQ
+
+##### 1. In the Transformer attention mechanism, why do we divide by $\sqrt{d_k}$ in the scaled dot-product attention?
+
+Mathematical reason: If queries and keys are independent with mean 0 and variance 1, their dot product has mean 0 and variance = ${d_k}$.
+
+Practical reason: Large dot products push softmax into regions with extremely small gradients. Dividing by $\sqrt{d_k}$ helps to keep the dot product in a reasonable range.
+
+We divide by $\sqrt{d_k}$ to scale the dot products. Since the variance of the dot product grows linearly with dimension $d_k$, dividing by $\sqrt{d_k}$ (the standard deviation) keeps the variance constant at 1. This prevents the softmax from entering saturation regions where gradients vanish, ensuring stable training.
