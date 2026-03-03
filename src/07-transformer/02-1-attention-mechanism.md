@@ -6,7 +6,7 @@
 
 The Fig. above illustrates this flow of information in an entire causal self-attention layer, in which this same attention computation happens in parallel at each token position $i$. Thus a self-attention layer maps input sequences $(x_1, ..., x_n)$ to output sequences of the same length $(a_1, ..., a_n)$.
 
-### Simplified version of attention
+#### Simplified version of attention
 At its heart, attention is really just a weighted sum of context vectors, with a lot of complications added to how the weights are computed and what gets summed.
 
 Let's describe a simplified version of attention, in which the attention output $a_i$ at token position $i$ is simply the weighted sum of all the representations $x_j$, for all $j \leq i$; we’ll use $\alpha_{ij}$ to mean how much $x_j$ should contribute to $a_i$:
@@ -32,9 +32,9 @@ The attention head allows us to distinctly represent three different roles that 
 
 To capture these three different roles, transformers introduce weight matrices $W^Q$, $W^K$, and $W^V$. These weights will project each input vector $x_i$ into a representation of its role as a key, query, or value:
 
-**$q_i = W^Q x_i$**
-**$k_i = W^K x_i$**
-**$v_i = W^V x_i$**
+**$q_i = x_iW^Q $**
+**$k_i = x_iW^K $**
+**$v_i = x_iW^V $**
 
 - When we are computing the similarity of the current element $x_i$ with some prior element $x_j$, we’ll use the **dot product** between the current element’s query vector $q_i$ and the preceding element’s key vector $k_j$. 
 - Furthermore, the result of a dot product can be an arbitrarily large (positive or negative) value, and exponentiating large values can lead to numerical issues and loss of gradients during training.
