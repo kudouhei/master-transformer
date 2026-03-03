@@ -20,6 +20,32 @@ $$
 \text{FFN}(x_i) = ReLU(x_iW_1 + b_1)W_2 + b_2
 $$
 
+```
+输入 x (来自注意力层)
+    ↓
+┌────────────────────┐
+│ 残差连接           │  x + Attention(x)
+│ (Add)              │
+└────────────────────┘
+    ↓
+┌────────────────────┐
+│ 层归一化           │
+│ (LayerNorm)        │
+└────────────────────┘
+    ↓
+┌────────────────────┐
+│ FFN                │  ← FFN layer
+│ ReLU(xW₁+b₁)W₂+b₂  │
+└────────────────────┘
+    ↓
+┌────────────────────┐
+│ 残差连接           │  x + FFN(x)
+│ (Add)              │
+└────────────────────┘
+    ↓
+输出到下一层
+```
+
 ### Layer Norm
 At two stages in the transformer block we normalize the vector, this process is called **layer norm**. It is one of many forms of normalization that can be used to improve training performance in deep neural networks by keeping the values of a hidden layer in a range that facilitates gradient-based training.
 
@@ -31,11 +57,11 @@ Layer norm is a variation of the z-score from statistics, applied to a single ve
 
 
 $$
-\mu = \frac{1}{d} \sum_{i=1}^{d} x_i
+\mu = \frac{1}{d} \sum_{i=1}^{d} x_i (均值)
 $$
 
 $$
-\sigma = \sqrt{\frac{1}{d} \sum_{i=1}^{d} (x_i - \mu)^2}
+\sigma = \sqrt{\frac{1}{d} \sum_{i=1}^{d} (x_i - \mu)^2} (标准差)
 $$
 
 - Given these values, the vector components are normalized by subtracting the mean from each and dividing by the standard deviation. The result of this computation is a new vector with zero mean and a standard deviation of one.
@@ -59,7 +85,7 @@ $$
 
 **Eq-2:**
 $$
-t_i^{2} = MultiHeadAttention(t_i^{1}, [t_i^{1}, ..., t_N^{1}])
+t_i^{2} = MultiHeadAttention(t_i^{1}, [t_1^{1}, ..., t_N^{1}])
 $$
 
 **Eq-3:**
