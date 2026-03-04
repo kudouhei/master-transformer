@@ -196,3 +196,28 @@ to make the probability of "mat" higher next time
 #### Step 6: Output
 
 Predicted next word: "mat" with **61.3%** confidence.
+
+#### Summary
+
+```
+
+Text: "the cat sat on the mat"
+  ↓
+Vocabulary → Indices: [4,5,6,7,4,8]
+  ↓
+Embedding + Position → X: [6×4] matrix
+  ↓
+Transformer Layer:
+  ├── Q/K/V projection
+  ├── Scaled dot-product attention
+  ├── Weighted sum → head₄
+  ├── Output projection + residual
+  ├── LayerNorm
+  ├── FFN + residual → final₄
+  ↓
+LM Head: final₄ × W_lm + b_lm → logits
+  ↓
+Softmax → probabilities
+  ↓
+**Predict: "mat"**
+```
