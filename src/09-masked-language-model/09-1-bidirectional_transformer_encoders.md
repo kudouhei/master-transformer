@@ -30,3 +30,22 @@ Adding the [MASK] token creates a mismatch between pretraining and downstream fi
 
 ![Masked Language Modeling](./images/03-train.png)
 
+### 3. Contextual Embeddings (dynamic)
+Contextual Embeddings（上下文嵌入）是指同一个词在不同语境中得到不同的向量表示。
+
+Given a pre-trained language model and a novel input sentence, we can think of the sequence of model outputs as constituting contextual embeddings for each token in the input. These contextual embeddings are vectors representing some aspect of the meaning of a token in context, and can be used for any task requiring the meaning of tokens or words.
+
+We can use contextual embeddings as representations of word meanings in context for any task that might require a model of word meaning.
+
+**Contextual embeddings represent the meaning of word instances: instances of a particular word type in a particular context.**
+
+
+### 4. Fine-Tuning for Classification
+
+#### 4.1 Sequence Classification
+
+#### 4.2 Sequence-Pair Classification
+
+### 5. Fine-Tuning for Sequence Labelling: Named Entity Recognition
+
+A named entity is, roughly speaking, anything that can be referred to with a proper name: a person, a location, an organization. The task of named entity recognition (NER) is to find spans of text that constitute proper names and tag the type of the entity.
