@@ -31,3 +31,23 @@ BM25 adds two parameters:
 The BM25 score of a document d given a query q is:
 
 $$ \text{bm25}(d, q) = \sum_{t \in q} \text{idf}(t, d) \times \frac{\text{tf}(t, d) }{{\text{tf}(t, d) + k \times (1 - b + b \times \frac{\text{length of d}}{\text{average length of documents}})}} $$
+
+## Answering Questions with RAG
+
+The method of generating based on retrieved documents is called retrieval-augmented generation or RAG, and the two components are sometimes called, for historical reasons, the retriever and the reader
+
+![alt text](./images/02-retrieval.png)
+
+Retrieval-based question answering has two stages: 
+- **retrieval**, which returns relevant documents from the collection, and
+- **reading**, in which an LLM generates answers given the documents as a prompt.
+
+### Retrieval-Augmented Generation
+
+the probability of a string from the previous tokens:
+
+$$ P(x_1, x_2, \ldots, x_n) = \prod_{i=1}^n P(x_i | x_1, x_2, \ldots, x_{i-1}) $$
+
+simple conditional generation for question answering adds a prompt like Q: , followed by a query q , and A:, all concatenated:
+
+$$ P(x_1, x_2, \ldots, x_n) = \prod_{i=1}^n P([Q: q], [A: x_i]) $$
