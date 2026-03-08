@@ -51,3 +51,6 @@ $$ P(x_1, x_2, \ldots, x_n) = \prod_{i=1}^n P(x_i | x_1, x_2, \ldots, x_{i-1}) $
 simple conditional generation for question answering adds a prompt like Q: , followed by a query q , and A:, all concatenated:
 
 $$ P(x_1, x_2, \ldots, x_n) = \prod_{i=1}^n P([Q: q], [A: x_i]) $$
+
+![alt text](./images/03-workflow.png)
+
