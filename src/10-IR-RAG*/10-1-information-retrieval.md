@@ -54,3 +54,99 @@ $$ P(x_1, x_2, \ldots, x_n) = \prod_{i=1}^n P([Q: q], [A: x_i]) $$
 
 ![alt text](./images/03-workflow.png)
 
+**RAG workflow = retrieve relevant context → augment prompt → generate grounded answer.**
+
+```
+[Offline]  Documents → Chunking → Embedding → Vector DB
+                                                ↑
+[Online]   Query → Embedding → Similarity Search → Retrieved Chunks
+                                                ↓
+                                       Prompt + Retrieved Context
+                                                ↓
+                                            LLM Generation
+                                                ↓
+                                             Final Answer
+```
+
+#### Example
+
+**Step 1: Document Chunking (Offline)**
+Split documents into semantic chunks:
+
+
+| Chunk | Content                                                                                                            | Source |
+|-------|--------------------------------------------------------------------------------------------------------------------|--------|
+| C1    | "The phrase 'the cat sat on the mat' is a classic example for teaching basic English sentence structure."           | Doc1   |
+| C2    | "Cats are obligate carnivores requiring meat in their diet."                                                       | Doc2   |
+| C3    | "Teaching English beginners starts with simple subject-verb-object sentences like 'the cat sat on the mat'."        | Doc3   |
+
+**Step 2: Embedding & Indexing (Offline)**
+Convert chunks into vectors and store in a vector database:
+
+
+| Chunk | Vector        |
+|-------|--------------|
+| C1    | [0.9, 0.1]   |
+| C2    | [0.2, 0.8]   |
+| C3    | [0.85, 0.15] |
+
+Store in vector database (FAISS, Milvus, etc.)
+
+**Step 3: Query Input (Online)**
+
+Query the vector database with a search query:
+
+`Query: "What is the significance of 'the cat sat on the mat' in language learning?"`
+
+**Step 4: Query Embedding (Online)**
+
+Encode query using same embedding model:
+```
+Query vector: [0.87, 0.13]
+```
+
+**Step 5: Similarity Search (Online)**
+
+Find top-K most similar chunks (cosine similarity):
+
+| Chunk | Vector        | Similarity |
+|-------|--------------|------------|
+| C1    | [0.9, 0.1]   | 0.99       |
+| C3    | [0.85, 0.15] | 0.98       |
+| C2    | [0.2, 0.8]   | 0.38       |
+
+Retrieved: C1, C3
+
+**Step 6: Prompt Construction (Online)**
+
+``` 
+System: Answer based ONLY on the provided context.
+
+Context:
+[1] The phrase 'the cat sat on the mat' is a classic example for teaching basic English sentence structure.
+[3] Teaching English beginners starts with simple subject-verb-object sentences like 'the cat sat on the mat'.
+
+Question: What is the significance of 'the cat sat on the mat' in language learning?
+
+Answer:
+```
+
+**Step 7: LLM Generation (Online)**
+LLM generates response using retrieved context:
+
+```
+'The cat sat on the mat' is significant in language learning as a classic example for teaching basic English sentence structure [1]. It demonstrates a simple subject-verb-object pattern, which is ideal for beginners [3]. The sentence clearly shows:
+- Subject: the cat
+- Verb: sat
+- Object/preposition: on the mat
+```
+
+**Step 8: Return Answer (Online)**
+
+Final response delivered to user with citations.
+
+**Summary**
+
+- RAG retrieves relevant context from a vector database
+- LLM generates answers based on retrieved context
+- RAG provides grounded, contextually relevant responses
